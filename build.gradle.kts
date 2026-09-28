@@ -42,7 +42,7 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured")
 }
 
-group = "pe.edu.nova"
+group = "pe.edu.nova.java.examples"
 version = "1.0.0-SNAPSHOT"
 
 java {
