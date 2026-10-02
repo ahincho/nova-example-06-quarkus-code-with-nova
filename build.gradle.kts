@@ -37,7 +37,7 @@ dependencies {
     implementation("io.quarkus:quarkus-rest")
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-arc")
-    implementation("pe.edu.nova.java.starters:nova-api-standard-quarkus-extension:2.0.1")
+    implementation("pe.edu.nova.java.starters:nova-api-standard-quarkus-extension:3.0.0")
     testImplementation("io.quarkus:quarkus-junit")
     testImplementation("io.rest-assured:rest-assured")
 }

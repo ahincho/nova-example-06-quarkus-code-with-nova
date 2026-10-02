@@ -2,16 +2,22 @@
 
 Aplicación Quarkus mínima, generada como un proyecto de code.quarkus.io y con una sola dependencia
 de Nova: `nova-api-standard-quarkus-extension`. Existe para mostrar qué cambia al agregar la extensión, y nada
-más: el recurso devuelve `ApiResponse<T>`, y una excepción no manejada sale con el mismo sobre sin
-escribir un solo mapper.
+más: el recurso devuelve `ApiResponse<T>`, y un error sale con el mismo sobre sin escribir un
+solo mapper.
 
 ## Qué muestra
 
 - `GET /hello` devuelve el sobre `ApiResponse`, con `success`, `status`, `data` y `errors`.
-- `GET /hello/boom` lanza `IllegalArgumentException`, y la extensión la convierte en un 400 con el
-  código `BAD_REQUEST`.
-- `application.properties` declara la extensión como dependencia indexable por Jandex. Sin eso,
-  Quarkus no descubre su mapper de excepciones y el error sale con el formato por defecto.
+- `GET /hello/boom` lanza `ApplicationError.invalidInput(...)`, y la extensión lo convierte en un
+  400 con el código `BAD_REQUEST` y un `traceId` en `metadata`.
+- `application.properties` está vacío a propósito. Desde la 3.0.0 la extensión trae su módulo de
+  deployment, que registra sus beans al construir la aplicación, así que ya no hace falta declararla
+  como dependencia indexable (`quarkus.index-dependency`). Con esas líneas el build falla.
+
+Una excepción inesperada, incluida `IllegalArgumentException`, ya no es un 400: responde un 500
+`INTERNAL_SERVER_ERROR` con el mensaje genérico del catálogo y deja el detalle solo en el log. Por
+eso `/hello/boom` lanza el error de Nova. El recurso también podría devolver el objeto suelto en
+vez de armar el `ApiResponse`: la extensión lo envuelve en el sobre de éxito con el status real.
 
 `GreetingResourceTest` verifica las dos respuestas de punta a punta. Para un ejemplo más completo
 del mismo stack, ver `nova-example-04-quarkus-reference`.
