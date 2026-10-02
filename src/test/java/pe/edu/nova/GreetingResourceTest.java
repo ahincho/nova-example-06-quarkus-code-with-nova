@@ -9,8 +9,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 
 /**
- * Tests de integracion que validan que el envelope {@code ApiResponse} y el
- * {@code ApiExceptionMapper} (provistos por
+ * Tests de integración que validan que el sobre {@code ApiResponse} y los
+ * mappers de errores por capas (provistos por
  * {@code nova-api-standard-quarkus-extension}) funcionan end-to-end.
  */
 @QuarkusTest
@@ -29,7 +29,7 @@ class GreetingResourceTest {
     }
 
     @Test
-    void testIllegalArgumentExceptionIsMappedToBadRequest() {
+    void testInvalidInputErrorIsMappedToBadRequest() {
         given()
             .when().get("/hello/boom")
             .then()
@@ -38,6 +38,7 @@ class GreetingResourceTest {
                 .body("status", is(400))
                 .body("data", is(nullValue()))
                 .body("errors[0].code", is("BAD_REQUEST"))
-                .body("errors[0].message", is("simulated validation error"));
+                .body("errors[0].message", is("Error de validación simulado"))
+                .body("metadata.traceId", is(notNullValue()));
     }
 }
